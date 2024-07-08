@@ -3,7 +3,7 @@ import Dependencies
 import Foundation
 import IssueReporting
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
   @preconcurrency import UIKit
 
   extension Application: DependencyKey {
