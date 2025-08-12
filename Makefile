@@ -1,5 +1,5 @@
 CONFIG = debug
-PLATFORM_IOS = iOS Simulator,name=iPhone 11 Pro Max
+PLATFORM_IOS = iOS Simulator,name=iPhone 15 Pro Max
 PLATFORM_MACOS = macOS
 PLATFORM_MAC_CATALYST = macOS,variant=Mac Catalyst
 PLATFORM_TVOS = tvOS Simulator,name=Apple TV
@@ -42,14 +42,6 @@ test-swift:
 	swift test
 	swift test -c release
 
-test-linux:
-	docker run \
-		--rm \
-		-v "$(PWD):$(PWD)" \
-		-w "$(PWD)" \
-		swift:5.7-focal \
-		bash -c 'apt-get update && apt-get -y install make && make test-swift'
-
 build-for-static-stdlib:
 	@swift build -c debug --static-swift-stdlib
 	@swift build -c release --static-swift-stdlib
@@ -60,18 +52,6 @@ build-for-library-evolution:
 		--target DependenciesAdditions \
 		-Xswiftc -enable-library-evolution
 
-build-for-static-stdlib-docker:
-	@docker run \
-		-v "$(PWD):$(PWD)" \
-		-w "$(PWD)" \
-		swift:5.8-focal \
-		bash -c "swift build -c debug --static-swift-stdlib"
-	@docker run \
-		-v "$(PWD):$(PWD)" \
-		-w "$(PWD)" \
-		swift:5.8-focal \
-		bash -c "swift build -c release --static-swift-stdlib"
-
 format:
 	swift format \
 		--ignore-unparsable-files \
@@ -80,4 +60,4 @@ format:
 		./Package.swift ./Sources ./Tests
 
 
-.PHONY: test test-swift test-linux build-for-library-evolution format
+.PHONY: test test-swift build-for-library-evolution format

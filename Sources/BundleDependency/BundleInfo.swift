@@ -1,7 +1,7 @@
 import Dependencies
 @_spi(Internals) import DependenciesAdditionsBasics
 import Foundation
-import XCTestDynamicOverlay
+import IssueReporting
 
 extension DependencyValues {
   public var bundleInfo: BundleInfo {
@@ -113,12 +113,13 @@ extension BundleInfo {
   static var unimplemented: BundleInfo {
     BundleInfo(
       _implementation: .init(
-        bundleIdentifier: .unimplemented(#"@Dependency(\.bundleInfo.bundleIdentifier)"#),
-        name: .unimplemented(#"@Dependency(\.bundleInfo.name)"#),
-        displayName: .unimplemented(#"@Dependency(\.bundleInfo.displayName)"#),
-        spokenName: .unimplemented(#"@Dependency(\.bundleInfo.spokenName)"#),
-        shortVersion: .unimplemented(#"@Dependency(\.bundleInfo.shortVersion)"#),
-        version: .unimplemented(#"@Dependency(\.bundleInfo.version)"#)
+        bundleIdentifier: .unimplemented(
+          #"@Dependency(\.bundleInfo.bundleIdentifier)"#, placeholder: ""),
+        name: .unimplemented(#"@Dependency(\.bundleInfo.name)"#, placeholder: ""),
+        displayName: .unimplemented(#"@Dependency(\.bundleInfo.displayName)"#, placeholder: ""),
+        spokenName: .unimplemented(#"@Dependency(\.bundleInfo.spokenName)"#, placeholder: ""),
+        shortVersion: .unimplemented(#"@Dependency(\.bundleInfo.shortVersion)"#, placeholder: ""),
+        version: .unimplemented(#"@Dependency(\.bundleInfo.version)"#, placeholder: "")
       )
     )
   }

@@ -2,7 +2,7 @@
   import Dependencies
   @_spi(Internals) import DependenciesAdditionsBasics
   import DeviceCheck
-  import XCTestDynamicOverlay
+  import IssueReporting
 
   extension DependencyValues {
     public var deviceCheckDevice: DeviceCheckDevice {
@@ -70,7 +70,7 @@
       .init(
         _implementation: .init(
           isSupported: .unimplemented(
-            #"@Dependency(\.deviceCheck.isSupported)"#),
+            #"@Dependency(\.deviceCheck.isSupported)"#, placeholder: false),
           generateToken: .unimplemented(
             #"@Dependency(\.deviceCheck.generateToken)"#)
         )

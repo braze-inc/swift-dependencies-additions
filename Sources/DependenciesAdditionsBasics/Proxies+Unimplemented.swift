@@ -1,6 +1,8 @@
 import Dependencies
+import IssueReporting
 
 extension ReadWriteBinding {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String,
     file: StaticString = #file,
@@ -8,9 +10,9 @@ extension ReadWriteBinding {
     line: UInt = #line
   ) -> Self where Value: Sendable {
     let value = LockIsolated<@Sendable () -> Value>(
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
-        file: file,
+        placeholder: () as! Value,
         fileID: fileID,
         line: line
       )
@@ -30,7 +32,7 @@ extension ReadWriteBinding {
     line: UInt = #line
   ) -> Self where Value: Sendable {
     let value = LockIsolated<@Sendable () -> Value>(
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         placeholder: placeholder(),
         fileID: fileID,
@@ -48,6 +50,7 @@ extension ReadWriteBinding {
 }
 
 extension ReadWriteProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String = "",
     file: StaticString = #file,
@@ -57,7 +60,7 @@ extension ReadWriteProxy {
     ReadWriteProxy(
       .unimplemented(
         description,
-        file: file,
+        placeholder: () as! Value,
         fileID: fileID,
         line: line
       )
@@ -80,6 +83,7 @@ extension ReadWriteProxy {
 }
 
 extension ReadOnlyProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String = "",
     file: StaticString = #file,
@@ -87,7 +91,13 @@ extension ReadOnlyProxy {
     line: UInt = #line
   ) -> Self {
     ReadOnlyProxy(
-      XCTestDynamicOverlay.unimplemented(description, file: file, fileID: fileID, line: line))
+      IssueReporting.unimplemented(
+        description,
+        placeholder: () as! Value,
+        fileID: fileID,
+        line: line
+      )
+    )
   }
   public static func unimplemented(
     _ description: String = "",
@@ -96,7 +106,7 @@ extension ReadOnlyProxy {
     line: UInt = #line
   ) -> Self {
     ReadOnlyProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         placeholder: placeholder,
         fileID: fileID,
@@ -107,6 +117,7 @@ extension ReadOnlyProxy {
 }
 
 extension MainActorReadWriteBinding {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String,
     file: StaticString = #file,
@@ -114,9 +125,9 @@ extension MainActorReadWriteBinding {
     line: UInt = #line
   ) -> Self where Value: Sendable {
     let value = LockIsolated<@Sendable () -> Value>(
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
-        file: file,
+        placeholder: () as! Value,
         fileID: fileID,
         line: line
       )
@@ -136,7 +147,7 @@ extension MainActorReadWriteBinding {
     line: UInt = #line
   ) -> Self where Value: Sendable {
     let value = LockIsolated<@Sendable () -> Value>(
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         placeholder: placeholder(),
         fileID: fileID,
@@ -154,6 +165,7 @@ extension MainActorReadWriteBinding {
 }
 
 extension MainActorReadWriteProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String = "",
     file: StaticString = #file,
@@ -163,7 +175,7 @@ extension MainActorReadWriteProxy {
     MainActorReadWriteProxy(
       .unimplemented(
         description,
-        file: file,
+        placeholder: () as! Value,
         fileID: fileID,
         line: line
       )
@@ -187,19 +199,20 @@ extension MainActorReadWriteProxy {
 }
 
 extension MainActorReadOnlyProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented(
     _ description: String = "",
-    file: StaticString = #file,
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self {
     MainActorReadOnlyProxy(
-      XCTestDynamicOverlay.unimplemented(
-        description,
-        file: file,
-        fileID: fileID,
-        line: line
-      )
+      value:
+        IssueReporting.unimplemented(
+          description,
+          placeholder: () as! Value,
+          fileID: fileID,
+          line: line
+        )
     )
   }
   public static func unimplemented(
@@ -209,7 +222,7 @@ extension MainActorReadOnlyProxy {
     line: UInt = #line
   ) -> Self {
     MainActorReadOnlyProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         placeholder: placeholder,
         fileID: fileID,
@@ -225,9 +238,10 @@ extension FunctionProxy {
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable () -> Result {
-    FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+    FunctionProxy(value: {
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -239,8 +253,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -252,8 +267,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -265,8 +281,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -279,8 +296,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -293,8 +311,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D, E) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -308,7 +327,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         placeholder: placeholder,
         fileID: fileID,
@@ -320,81 +339,91 @@ extension FunctionProxy {
 
 // Async
 extension FunctionProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable () async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable (A) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
-
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, D, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
-
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, D, E, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D, E) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -410,7 +439,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable () throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -423,7 +452,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -436,7 +465,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -449,7 +478,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -463,7 +492,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -477,7 +506,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D, E) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -494,7 +523,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable () async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -507,7 +536,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -520,7 +549,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -533,7 +562,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -547,7 +576,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -561,7 +590,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @Sendable (A, B, C, D, E) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -571,67 +600,80 @@ extension FunctionProxy {
 }
 
 extension FunctionProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable () -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
-        fileID: fileID,
-        line: line
-      )
-    })
-  }
-  public static func unimplemented<A, Result>(
-    _ description: String = "",
-    fileID: StaticString = #fileID,
-    line: UInt = #line
-  ) -> Self where Value == @MainActor @Sendable (A) -> Result {
-    FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
-        description,
-        fileID: fileID,
-        line: line
-      )
-    })
-  }
-  public static func unimplemented<A, B, Result>(
-    _ description: String = "",
-    fileID: StaticString = #fileID,
-    line: UInt = #line
-  ) -> Self where Value == @MainActor @Sendable (A, B) -> Result {
-    FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
-        description,
-        fileID: fileID,
-        line: line
-      )
-    })
-  }
-  public static func unimplemented<A, B, C, Result>(
-    _ description: String = "",
-    fileID: StaticString = #fileID,
-    line: UInt = #line
-  ) -> Self where Value == @MainActor @Sendable (A, B, C) -> Result {
-    FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
-        description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
 
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
+  public static func unimplemented<A, Result>(
+    _ description: String = "",
+    fileID: StaticString = #fileID,
+    line: UInt = #line
+  ) -> Self where Value == @MainActor @Sendable (A) -> Result {
+    FunctionProxy({
+      IssueReporting.unimplemented(
+        description,
+        placeholder: fatalError(),
+        fileID: fileID,
+        line: line
+      )
+    })
+  }
+
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
+  public static func unimplemented<A, B, Result>(
+    _ description: String = "",
+    fileID: StaticString = #fileID,
+    line: UInt = #line
+  ) -> Self where Value == @MainActor @Sendable (A, B) -> Result {
+    FunctionProxy({
+      IssueReporting.unimplemented(
+        description,
+        placeholder: fatalError(),
+        fileID: fileID,
+        line: line
+      )
+    })
+  }
+
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
+  public static func unimplemented<A, B, C, Result>(
+    _ description: String = "",
+    fileID: StaticString = #fileID,
+    line: UInt = #line
+  ) -> Self where Value == @MainActor @Sendable (A, B, C) -> Result {
+    FunctionProxy({
+      IssueReporting.unimplemented(
+        description,
+        placeholder: fatalError(),
+        fileID: fileID,
+        line: line
+      )
+    })
+  }
+
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, D, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -644,8 +686,9 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D, E) -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -655,81 +698,91 @@ extension FunctionProxy {
 
 // Async
 extension FunctionProxy {
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable () async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
-
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, D, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
     })
   }
-
+  @available(*, unavailable, message: "Use .unimplemented(_:placeholder:)")
   public static func unimplemented<A, B, C, D, E, Result>(
     _ description: String = "",
     fileID: StaticString = #fileID,
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D, E) async -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
+        placeholder: fatalError(),
         fileID: fileID,
         line: line
       )
@@ -745,7 +798,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable () throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -758,7 +811,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -771,7 +824,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -784,7 +837,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -798,7 +851,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -812,7 +865,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D, E) throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -829,7 +882,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable () async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -842,7 +895,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -855,7 +908,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -868,7 +921,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -882,7 +935,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
@@ -896,7 +949,7 @@ extension FunctionProxy {
     line: UInt = #line
   ) -> Self where Value == @MainActor @Sendable (A, B, C, D, E) async throws -> Result {
     FunctionProxy({
-      XCTestDynamicOverlay.unimplemented(
+      IssueReporting.unimplemented(
         description,
         fileID: fileID,
         line: line
